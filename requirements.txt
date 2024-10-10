@@ -1,0 +1,15 @@
+phidata 
+nest_asyncio 
+beautifulsoup4 
+openai 
+duckduckgo-search 
+sqlalchemy 
+pgvector 
+psycopg 
+pypdf 
+ollama
+pypdf
+llama-index
+python-dotenv
+langchain_community
+crewai_tools==0.1.6

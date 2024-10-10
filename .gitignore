@@ -1,0 +1,6 @@
+.venv
+venv\
+venv
+.env
+
+# conda activate E:\crewAi_agent\venv
