@@ -1,4 +1,4 @@
-import chainlit as cl
+import streamlit as st
 from crewai import Agent, Task, Crew
 import os
 from dotenv import load_dotenv
@@ -16,7 +16,7 @@ planner = Agent(
               'You collect information that helps the audience learn something and make informed decisions. '
               'Your work is the basis for the content writer to write an article on this topic.',
     allow_delegation=False,
-    verbose=True  # Ensure verbose is a boolean
+    verbose=True
 )
 
 writer = Agent(
@@ -27,7 +27,7 @@ writer = Agent(
               "about the topic. You also provide objective and impartial insights, backing them up with information "
               "provided by the Content Planner.",
     allow_delegation=False,
-    verbose=True  # Ensure verbose is a boolean
+    verbose=True
 )
 
 editor = Agent(
@@ -37,7 +37,7 @@ editor = Agent(
               "Your goal is to review the blog post to ensure it follows journalistic best practices, "
               "provides balanced viewpoints when providing opinions, and avoids major controversial topics or opinions.",
     allow_delegation=False,
-    verbose=True  # Ensure verbose is a boolean
+    verbose=True
 )
 
 # Define tasks
@@ -73,14 +73,29 @@ edit = Task(
 crew = Crew(
     agents=[planner, writer, editor],
     tasks=[plan, write, edit],
-    verbose=True  # Changed to a boolean
+    verbose=True
 )
 
-# Chainlit chatbot UI
-@cl.on_message
-def main(message: str):
-    topic = message.strip()
-    # Run the crew AI with user input
-    result = crew.kickoff(inputs={"topic": topic})
-    # Output the result to Chainlit UI
-    cl.Message(content=f"Generated content on topic '{topic}':\n{result}").send()
+# Streamlit UI
+st.title('CrewAI Blog Generator')
+
+# Input field for the topic
+topic = st.text_input('Enter the topic for the blog post:')
+
+if st.button('Generate Blog Post'):
+    if topic:
+        # Run the crew AI with user input
+        result = crew.kickoff(inputs={"topic": topic})
+        
+        # Debug: Show the keys in result
+        st.write("Result structure:", result)
+        
+        # Assuming result['plan'] or result['write'] holds the content
+        if 'write' in result:
+            st.subheader(f"Blog Post on: {topic}")
+            st.markdown(result['write'], unsafe_allow_html=True)
+        else:
+            st.error("No content found in result.")
+    else:
+        st.error("Please enter a topic.")
+
