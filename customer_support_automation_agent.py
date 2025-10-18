@@ -115,3 +115,4 @@ inputs={
                "Can you provide guidance?"
 }
 result = crew.kickoff(inputs=inputs)
+print(result)
